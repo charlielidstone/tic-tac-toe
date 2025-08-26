@@ -14,6 +14,17 @@ static void printBoard(char board[3][3]) {
     }
 }
 
+static bool isMovesLeft(char board[3][3]) {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] == ' ') {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 static void printExampleBoard() {
     std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+--\n 7 | 8 | 9 \n\n";
 }
@@ -66,34 +77,34 @@ static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
         return failUnknownError;
 }
 
-static bool evaluateBoard(char(&board)[3][3]) {
+static int evaluateBoard(char(&board)[3][3]) {
     static char referenceMark{ board[0][0] };
     for (int row = 0; row < 3; row++) {
         if (board[row][0] != ' ' &&
             board[row][0] == board[row][1] &&
             board[row][1] == board[row][2]) {
-            return true;
+            return board[row][0] == 'X' ? +1 : -1;
         }
     }
     for (int col = 0; col < 3; col++) {
         if (board[0][col] != ' ' &&
             board[0][col] == board[1][col] &&
             board[1][col] == board[2][col]) {
-            return true;
+            return board[0][col] == 'X' ? +1 : -1;
         }
     }
     if (board[0][0] != ' ' &&
         board[0][0] == board[1][1] &&
         board[1][1] == board[2][2]) {
-        return true;
+        return board[0][0] == 'X' ? +1 : -1;
     }
     if (board[0][2] != ' ' &&
         board[0][2] == board[1][1] &&
         board[1][1] == board[2][0]) {
-        return true;
+        return board[0][2] == 'X' ? +1 : -1;
     }
 
-    return false;
+    return 0;
 }
 
 int	main() {
@@ -138,14 +149,23 @@ int	main() {
             errorMessage = "\nSome unknown error occurred. :(";
         }
 
-        isGameOver = evaluateBoard(board);
+        isGameOver = evaluateBoard(board) || !isMovesLeft(board); // evaluateBoard() returns 0, +1, -1, for no win, X win, O win, respectively
 
     } while (!isGameOver);
 
     clearConsole();
     printExampleBoard();
     printBoard(board);
-    std::cout << "\nGood game!" << std::endl;
+    if (evaluateBoard(board) == +1) {
+        std::cout << "\nGood game! Player 1 wins!" << std::endl;
+    } else if (evaluateBoard(board) == -1) {
+        std::cout << "\nGood game! Player 2 wins!" << std::endl;
+    } else if (evaluateBoard(board) == 0) {
+        std::cout << "\nGood game! It's a TIE!" << std::endl;
+    }
+    else {
+        std::cout << "\nGood game!" << std::endl;
+    }
 
     return 0;
 }
