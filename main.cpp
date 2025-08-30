@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <limits>
 
 static void printBoard(char board[3][3]) {
     for (int row = 0; row < 3; row++) {
@@ -47,12 +48,7 @@ enum UpdateStatus {
     failUnknownError,
 };
 
-static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
-    std::regex pattern(R"(^[1-9]$)");
-    std::string squareNumStr = std::to_string(squareNum);
-    if (!std::regex_search(squareNumStr, pattern))
-        return failInvalidInput;
-
+static std::pair<int, int> getCoordinates(int squareNum) {
     int x{};
     if (squareNum < 10 && squareNum > 6) x = 2;
     if (squareNum < 7 && squareNum > 3) x = 1;
@@ -62,6 +58,34 @@ static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
     if (squareNum % 3 == 0) y = 2;
     if (squareNum % 3 == 2) y = 1;
     if (squareNum % 3 == 1) y = 0;
+
+    return { x, y };
+}
+
+static int getSquareNum(int x, int y) {
+    int squareNum{};
+
+    if (x == 2) squareNum = 7;
+    if (x == 1) squareNum = 4;
+    if (x == 0) squareNum = 1;
+
+    if (y == 0) squareNum += 0;
+    if (y == 1) squareNum += 1;
+    if (y == 2) squareNum += 2;
+
+    return squareNum;
+}
+
+
+static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
+    std::regex pattern(R"(^[1-9]$)");
+    std::string squareNumStr = std::to_string(squareNum);
+    if (!std::regex_search(squareNumStr, pattern))
+        return failInvalidInput;
+
+    auto moveCoordinates = getCoordinates(squareNum);
+    int x = moveCoordinates.first;
+    int y = moveCoordinates.second;
 
     if (isP1 && board[x][y] == ' ') {
         board[x][y] = 'X';
@@ -107,9 +131,76 @@ static int evaluateBoard(char(&board)[3][3]) {
     return 0;
 }
 
+// minimax() returns a score for a single board position. it goes through every possible position after the given position by calling itself until a win, loss, or tie is reached.
+static int minimax(char(&board)[3][3], bool isMax) {
+    int score = evaluateBoard(board);
+
+    if (score == 1 || score == -1) return score;
+    if (!isMovesLeft(board)) return 0;
+
+    if (isMax) {
+        int bestScore = std::numeric_limits<int>::min();;
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board[row][col] == ' ') {
+                    board[row][col] = 'O';
+                    int val = minimax(board, false);
+                    board[row][col] = ' ';
+                    if (val >= bestScore) {
+                        bestScore = val;
+                    }
+                }
+            }
+        }
+        return bestScore;
+    }
+    else {
+        int bestScore = std::numeric_limits<int>::max();
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board[row][col] == ' ') {
+                    board[row][col] = 'X';
+                    int val = minimax(board, true);
+                    board[row][col] = ' ';
+                    if (val <= bestScore) {
+                        bestScore = val;
+                    }
+                }
+            }
+        }
+        return bestScore;
+    }
+}
+
+static std::pair<int, int> findBestMove(char(&board)[3][3]) {
+    std::pair<int, int> bestMove{};
+    int bestScore{ 0 };
+    int score{};
+
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            if (board[row][col] == ' ') {
+                board[row][col] = 'O';
+                score = minimax(board, true);
+                std::cout << "score: " << score << std::endl;
+                board[row][col] = ' ';
+                if (score >= bestScore) {
+                    bestScore = score;
+                    bestMove = { row, col };
+                }
+            }
+        }
+    }
+
+    return bestMove;
+}
+
 int	main() {
     bool isGameOver{ false };
 
+    // board[row][col]
     char board[3][3] = {
         { ' ', ' ', ' ' },
         { ' ', ' ', ' ' },
@@ -128,7 +219,14 @@ int	main() {
         std::cout << errorMessage << std::endl;
 
         std::cout << "\n" << currentPlayer << ", where would you like to go ? : ";
-        std::cin >> squareNum;
+
+        if (currentPlayer == "Player 1 (X's)") {
+            std::cin >> squareNum;
+        }
+        else if (currentPlayer == "Player 2 (O's)") {
+            auto bestMove = findBestMove(board);
+            squareNum = getSquareNum(bestMove.first, bestMove.second);
+        }
 
         static UpdateStatus updateStatus{ success };
         updateStatus = updateBoard(board, squareNum, (currentPlayer == "Player 1 (X's)"));
