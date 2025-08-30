@@ -3,6 +3,8 @@
 #include <vector>
 #include <regex>
 #include <limits>
+#include <thread>
+#include <chrono>
 
 static void printBoard(char board[3][3]) {
     for (int row = 0; row < 3; row++) {
@@ -107,25 +109,25 @@ static int evaluateBoard(char(&board)[3][3]) {
         if (board[row][0] != ' ' &&
             board[row][0] == board[row][1] &&
             board[row][1] == board[row][2]) {
-            return board[row][0] == 'X' ? +1 : -1;
+            return board[row][0] == 'O' ? +10 : -10;
         }
     }
     for (int col = 0; col < 3; col++) {
         if (board[0][col] != ' ' &&
             board[0][col] == board[1][col] &&
             board[1][col] == board[2][col]) {
-            return board[0][col] == 'X' ? +1 : -1;
+            return board[0][col] == 'O' ? +10 : -10;
         }
     }
     if (board[0][0] != ' ' &&
         board[0][0] == board[1][1] &&
         board[1][1] == board[2][2]) {
-        return board[0][0] == 'X' ? +1 : -1;
+        return board[0][0] == 'O' ? +10 : -10;
     }
     if (board[0][2] != ' ' &&
         board[0][2] == board[1][1] &&
         board[1][1] == board[2][0]) {
-        return board[0][2] == 'X' ? +1 : -1;
+        return board[0][2] == 'O' ? +10 : -10;
     }
 
     return 0;
@@ -135,28 +137,11 @@ static int evaluateBoard(char(&board)[3][3]) {
 static int minimax(char(&board)[3][3], bool isMax) {
     int score = evaluateBoard(board);
 
-    if (score == 1 || score == -1) return score;
+    if (score == 10 || score == -10) return score;
     if (!isMovesLeft(board)) return 0;
 
     if (isMax) {
-        int bestScore = std::numeric_limits<int>::min();;
-
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if (board[row][col] == ' ') {
-                    board[row][col] = 'O';
-                    int val = minimax(board, false);
-                    board[row][col] = ' ';
-                    if (val >= bestScore) {
-                        bestScore = val;
-                    }
-                }
-            }
-        }
-        return bestScore;
-    }
-    else {
-        int bestScore = std::numeric_limits<int>::max();
+        int bestScore = std::numeric_limits<int>::max();;
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -172,11 +157,28 @@ static int minimax(char(&board)[3][3], bool isMax) {
         }
         return bestScore;
     }
+    else {
+        int bestScore = std::numeric_limits<int>::min();
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                if (board[row][col] == ' ') {
+                    board[row][col] = 'O';
+                    int val = minimax(board, false);
+                    board[row][col] = ' ';
+                    if (val >= bestScore) {
+                        bestScore = val;
+                    }
+                }
+            }
+        }
+        return bestScore;
+    }
 }
 
 static std::pair<int, int> findBestMove(char(&board)[3][3]) {
-    std::pair<int, int> bestMove{};
-    int bestScore{ 0 };
+    std::pair<int, int> bestMove = { -1, -1 };
+    int bestScore = std::numeric_limits<int>::min();
     int score{};
 
     for (int row = 0; row < 3; row++) {
@@ -184,7 +186,7 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
             if (board[row][col] == ' ') {
                 board[row][col] = 'O';
                 score = minimax(board, true);
-                std::cout << "score: " << score << std::endl;
+                std::cout << "\nscore: " << score;
                 board[row][col] = ' ';
                 if (score >= bestScore) {
                     bestScore = score;
@@ -224,8 +226,13 @@ int	main() {
             std::cin >> squareNum;
         }
         else if (currentPlayer == "Player 2 (O's)") {
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             auto bestMove = findBestMove(board);
             squareNum = getSquareNum(bestMove.first, bestMove.second);
+            //std::cout << "\nChosen square: " << squareNum;
+            std::cout << squareNum;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
 
         static UpdateStatus updateStatus{ success };
@@ -247,16 +254,16 @@ int	main() {
             errorMessage = "\nSome unknown error occurred. :(";
         }
 
-        isGameOver = evaluateBoard(board) || !isMovesLeft(board); // evaluateBoard() returns 0, +1, -1, for no win, X win, O win, respectively
+        isGameOver = evaluateBoard(board) || !isMovesLeft(board); // evaluateBoard() returns 0, +10, -10, for no win, X win, O win, respectively
 
     } while (!isGameOver);
 
     clearConsole();
     printExampleBoard();
     printBoard(board);
-    if (evaluateBoard(board) == +1) {
+    if (evaluateBoard(board) == +10) {
         std::cout << "\nGood game! Player 1 wins!" << std::endl;
-    } else if (evaluateBoard(board) == -1) {
+    } else if (evaluateBoard(board) == -10) {
         std::cout << "\nGood game! Player 2 wins!" << std::endl;
     } else if (evaluateBoard(board) == 0) {
         std::cout << "\nGood game! It's a TIE!" << std::endl;
