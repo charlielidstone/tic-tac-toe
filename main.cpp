@@ -134,10 +134,12 @@ static int evaluateBoard(char(&board)[3][3]) {
 }
 
 // minimax() returns a score for a single board position. it goes through every possible position after the given position by calling itself until a win, loss, or tie is reached.
-static int minimax(char(&board)[3][3], bool isMax) {
+static int minimax(char(&board)[3][3], bool isMax, int depth) {
     int score = evaluateBoard(board);
 
-    if (score == 10 || score == -10) return score;
+    if (score == 10) return score - depth;
+    if (score == -10) return score + depth;
+
     if (!isMovesLeft(board)) return 0;
 
     if (isMax) {
@@ -147,7 +149,7 @@ static int minimax(char(&board)[3][3], bool isMax) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
                     board[row][col] = 'X';
-                    int val = minimax(board, true);
+                    int val = minimax(board, true, depth + 1);
                     board[row][col] = ' ';
                     if (val <= bestScore) {
                         bestScore = val;
@@ -164,7 +166,7 @@ static int minimax(char(&board)[3][3], bool isMax) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
                     board[row][col] = 'O';
-                    int val = minimax(board, false);
+                    int val = minimax(board, false, depth + 1);
                     board[row][col] = ' ';
                     if (val >= bestScore) {
                         bestScore = val;
@@ -185,7 +187,7 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
         for (int col = 0; col < 3; col++) {
             if (board[row][col] == ' ') {
                 board[row][col] = 'O';
-                score = minimax(board, true);
+                score = minimax(board, true, 0);
                 std::cout << "\nscore: " << score;
                 board[row][col] = ' ';
                 if (score >= bestScore) {
