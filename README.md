@@ -6,3 +6,6 @@ game engine coming soon!
 
 
 if you wanna run you prolly gotta have a c++ compiler ig 🤷‍♂️ i just do it in visual studio
+
+
+currently working on the AI with minimax
