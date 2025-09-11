@@ -139,6 +139,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
 
 	//std::cout << "depth: " << depth << std::endl;
 
+    // we subract the depth because we want to prioritise the moves that are closest to the top of the tree
     if (score == 10) return score - depth;
     if (score == -10) return score + depth;
 
