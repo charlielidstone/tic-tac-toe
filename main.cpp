@@ -137,7 +137,7 @@ static int evaluateBoard(char(&board)[3][3]) {
 static int minimax(char(&board)[3][3], bool isMax, int depth) {
     int score = evaluateBoard(board);
 
-	std::cout << "depth: " << depth << std::endl;
+	//std::cout << "depth: " << depth << std::endl;
 
     if (score == 10) return score - depth;
     if (score == -10) return score + depth;
