@@ -1,11 +1,7 @@
 # tic-tac-toe
 
-little console-based tic-tac-toe game written in c++.
+Console-based tic-tac-toe game written in C++.
 
-game engine coming soon!
+Currently working on the bot which uses a minimax algorithm. Planning to add alpha-beta prunning though it may not may much difference for such a simple game.
 
-
-if you wanna run you prolly gotta have a c++ compiler ig 🤷‍♂️ i just do it in visual studio
-
-
-currently working on the AI with minimax
+I just run it through Visual Studio, I haven't yet bothered to install a standalone C++ compiler yet because it seems like a pretty tedious task.
