@@ -154,6 +154,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
                     board[row][col] = 'X';
                     int val = minimax(board, true, depth + 1);
                     board[row][col] = ' ';
+                    std::cout << "bestScore: " << bestScore << "\n";
                     if (val <= bestScore) {
                         bestScore = val;
                     }
@@ -171,6 +172,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
                     board[row][col] = 'O';
                     int val = minimax(board, false, depth + 1);
                     board[row][col] = ' ';
+                    std::cout << "bestScore: " << bestScore << "\n";
                     if (val >= bestScore) {
                         bestScore = val;
                     }
