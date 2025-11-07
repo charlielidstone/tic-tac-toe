@@ -154,7 +154,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
                     board[row][col] = 'X';
                     int val = minimax(board, true, depth + 1);
                     board[row][col] = ' ';
-                    std::cout << "bestScore: " << bestScore << "\n";
+                    //std::cout << "bestScore: " << bestScore << "\n";
                     if (val <= bestScore) {
                         bestScore = val;
                     }
@@ -172,7 +172,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
                     board[row][col] = 'O';
                     int val = minimax(board, false, depth + 1);
                     board[row][col] = ' ';
-                    std::cout << "bestScore: " << bestScore << "\n";
+                    //std::cout << "bestScore: " << bestScore << "\n";
                     if (val >= bestScore) {
                         bestScore = val;
                     }
@@ -191,9 +191,10 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
     for (int row = 0; row < 3; row++) {
         for (int col = 0; col < 3; col++) {
             if (board[row][col] == ' ') {
+                std::cout << "\nchecking position " << row << ", " << col << "\n";
                 board[row][col] = 'O';
                 score = minimax(board, true, 0);
-                std::cout << "\nscore: " << score;
+                std::cout << "score: " << score << "\n";
                 board[row][col] = ' ';
                 if (score >= bestScore) {
                     bestScore = score;
