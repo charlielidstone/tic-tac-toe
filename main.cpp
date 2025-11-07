@@ -1,3 +1,19 @@
+/**
+* @brief a little tic-tac-toe game in the console made with a minimax algorithm
+* @author Charlie Lidstone
+*/
+
+/*
+* the logic must be messed up somewhere because the bot sometimes loses
+* it loses when we play any of the following: 
+* 3, 7, 1, 2
+* 1, 3, 7, 5
+* 1, 5, 7, 3
+* 
+*/
+
+
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -220,7 +236,7 @@ int	main() {
     std::string errorMessage{ "" };
 
     do {
-        static std::string currentPlayer{ "Player 1 (X's)" };
+        static std::string currentPlayer{ "Player 0 (O's)" };
         static int squareNum{};
 
         clearConsole();
