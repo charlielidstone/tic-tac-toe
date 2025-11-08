@@ -5,6 +5,7 @@
 
 # binaries
 *.exe
+*.dll
 
 # User-specific files
 *.rsuser
