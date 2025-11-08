@@ -12,8 +12,6 @@
 * 
 */
 
-
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -23,7 +21,7 @@
 #include <chrono>
 
 /**
- * @brief Prints the current 3×3 Tic-Tac-Toe board to the console.
+ * @brief Prints the current 3×3 tic-tac-toe board to the console.
  * @param board 3×3 array representing the current game state.
  */
 static void printBoard(char board[3][3]) {
