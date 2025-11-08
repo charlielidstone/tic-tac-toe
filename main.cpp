@@ -3,15 +3,6 @@
 * @author Charlie Lidstone
 */
 
-/*
-* the logic must be messed up somewhere because the bot sometimes loses
-* it loses when we play any of the following: 
-* 3, 7, 1, 2
-* 1, 3, 7, 5
-* 1, 5, 7, 3
-* 
-*/
-
 #include <iostream>
 #include <string>
 #include <vector>
