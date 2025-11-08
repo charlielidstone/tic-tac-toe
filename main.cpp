@@ -22,6 +22,10 @@
 #include <thread>
 #include <chrono>
 
+/**
+ * @brief Prints the current 3×3 Tic-Tac-Toe board to the console.
+ * @param board 3×3 array representing the current game state.
+ */
 static void printBoard(char board[3][3]) {
     for (int row = 0; row < 3; row++) {
         std::cout << " " << board[row][0] << " | "
@@ -33,6 +37,11 @@ static void printBoard(char board[3][3]) {
     }
 }
 
+/**
+ * @brief Checks if there are any empty spaces left on the board.
+ * @param board 3×3 array representing the current game state.
+ * @return True if at least one empty space (' ') exists, false otherwise.
+ */
 static bool isMovesLeft(char board[3][3]) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -44,6 +53,9 @@ static bool isMovesLeft(char board[3][3]) {
     return false;
 }
 
+/**
+ * @brief Prints an example tic-tac-toe board with numbered positions (1–9).
+ */
 static void printExampleBoard() {
     std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+--\n 7 | 8 | 9 \n\n";
 }
@@ -66,6 +78,11 @@ enum UpdateStatus {
     failUnknownError,
 };
 
+/**
+ * @brief Converts a square number (1–9) to its corresponding board coordinates.
+ * @param squareNum Board position (1–9).
+ * @return Pair (x, y) representing row and column indices.
+ */
 static std::pair<int, int> getCoordinates(int squareNum) {
     int x{};
     if (squareNum < 10 && squareNum > 6) x = 2;
@@ -80,6 +97,12 @@ static std::pair<int, int> getCoordinates(int squareNum) {
     return { x, y };
 }
 
+/**
+ * @brief Converts board coordinates to the corresponding square number (1–9).
+ * @param x Row index (0–2).
+ * @param y Column index (0–2).
+ * @return Square number corresponding to the given coordinates.
+ */
 static int getSquareNum(int x, int y) {
     int squareNum{};
 
@@ -94,7 +117,13 @@ static int getSquareNum(int x, int y) {
     return squareNum;
 }
 
-
+/**
+ * @brief Updates the board with the current player's move
+ * @param board, Reference to the 3×3 board array containing 'X', 'O', or ' '.
+ * @param squareNum, The target square number (1–9) for the move.
+ * @param isP1 True for Player 1 ('X'), false for Player 2 ('O').
+ * @return UpdateStatus: success, failInvalidInput, failSpaceOccupied, or failUnknownError.
+ */
 static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
     std::regex pattern(R"(^[1-9]$)");
     std::string squareNumStr = std::to_string(squareNum);
@@ -119,7 +148,12 @@ static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
         return failUnknownError;
 }
 
-static int evaluateBoard(char(&board)[3][3]) {
+/*
+* @brief determines the state of the game for the given board
+* @param board, reference to 2D array representing 3x3 game board
+* @return 10 if the board is a win for O, -10 if it is a win for X, 0 otherwise
+*/
+static int evaluateBoard(char (&board)[3][3]) {
     static char referenceMark{ board[0][0] };
     for (int row = 0; row < 3; row++) {
         if (board[row][0] != ' ' &&
@@ -149,7 +183,13 @@ static int evaluateBoard(char(&board)[3][3]) {
     return 0;
 }
 
-// minimax() returns a score for a single board position. it goes through every possible position after the given position by calling itself until a win, loss, or tie is reached.
+/*
+* @brief returns a score for a single board position by repeatedly calling evaluateBoard() until a win, draw, or loss is reached
+* @param board, reference to 2D array representing the game board
+* @param isMax, boolean for whether or not we should maximise the score. We want to maximise for our score, minimise for the opponents
+* @param depth, an integer representing the recursive level of the function call
+* @return an integer representing the score the the given position
+*/
 static int minimax(char(&board)[3][3], bool isMax, int depth) {
     int score = evaluateBoard(board);
 
@@ -236,7 +276,7 @@ int	main() {
     std::string errorMessage{ "" };
 
     do {
-        static std::string currentPlayer{ "Player 0 (O's)" };
+        static std::string currentPlayer{ "Player 1 (X's)" };
         static int squareNum{};
 
         clearConsole();
