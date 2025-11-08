@@ -55,7 +55,7 @@ static bool isMovesLeft(char board[3][3]) {
  * @brief Prints an example tic-tac-toe board with numbered positions (1–9).
  */
 static void printExampleBoard() {
-    std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+--\n 7 | 8 | 9 \n\n";
+    std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+---\n 7 | 8 | 9 \n\n";
 }
 
 static void printErrorLog(const std::vector<std::string>& errorLog) {
