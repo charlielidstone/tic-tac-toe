@@ -266,6 +266,8 @@ int	main() {
     do {
         static std::string currentPlayer{ "Player 1 (X's)" };
         static int squareNum{};
+        static UpdateStatus updateStatus{ success };
+        errorMessage = "";
 
         clearConsole();
         printExampleBoard();
@@ -294,7 +296,6 @@ int	main() {
             //std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
 
-        static UpdateStatus updateStatus{ success };
         updateStatus = updateBoard(board, squareNum, (currentPlayer == "Player 1 (X's)"));
         if (updateStatus == success) {
             errorMessage = "";
