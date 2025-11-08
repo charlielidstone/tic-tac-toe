@@ -284,14 +284,14 @@ int	main() {
         std::cout << "\n" << currentPlayer << ", where would you like to go ? : ";
 
         if (currentPlayer == "Player 1 (X's)") {
-            //std::cin >> squareNum;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            auto bestMove = findBestMove(board);
-            squareNum = getSquareNum(bestMove.first, bestMove.second);
-            //std::cout << "\nChosen square: " << squareNum;
-            //std::cout << squareNum;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            //std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
+            std::cin >> squareNum;
+            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            //auto bestMove = findBestMove(board);
+            //squareNum = getSquareNum(bestMove.first, bestMove.second);
+            ////std::cout << "\nChosen square: " << squareNum;
+            ////std::cout << squareNum;
+            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            ////std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
         else if (currentPlayer == "Player 2 (O's)") {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
