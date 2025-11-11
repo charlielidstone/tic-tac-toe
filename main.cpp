@@ -324,9 +324,9 @@ int	main() {
     printExampleBoard();
     printBoard(board);
     if (evaluateBoard(board) == +10) {
-        std::cout << "\nGood game! Player 1 wins!" << std::endl;
+        std::cout << "\nGood game! Player 0 wins!" << std::endl;
     } else if (evaluateBoard(board) == -10) {
-        std::cout << "\nGood game! Player 2 wins!" << std::endl;
+        std::cout << "\nGood game! Player 1 wins!" << std::endl;
     } else if (evaluateBoard(board) == 0) {
         std::cout << "\nGood game! It's a TIE!" << std::endl;
     }
