@@ -3,6 +3,15 @@
 * @author Charlie Lidstone
 */
 
+/*
+* the logic must be messed up somewhere because the bot sometimes loses
+* it loses when we play any of the following: 
+* 3, 7, 1, 2
+* 1, 3, 7, 5
+* 1, 5, 7, 3
+* 
+*/
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,7 +23,7 @@
 /**
  * @brief Prints the current 3×3 tic-tac-toe board to the console.
  * @param board 3×3 array representing the current game state.
- */
+ */ 
 static void printBoard(char board[3][3]) {
     for (int row = 0; row < 3; row++) {
         std::cout << " " << board[row][0] << " | "
@@ -46,7 +55,7 @@ static bool isMovesLeft(char board[3][3]) {
  * @brief Prints an example tic-tac-toe board with numbered positions (1–9).
  */
 static void printExampleBoard() {
-    std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+---\n 7 | 8 | 9 \n\n";
+    std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+--\n 7 | 8 | 9 \n\n";
 }
 
 static void printErrorLog(const std::vector<std::string>& errorLog) {
@@ -143,6 +152,7 @@ static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
 * @return 10 if the board is a win for O, -10 if it is a win for X, 0 otherwise
 */
 static int evaluateBoard(char (&board)[3][3]) {
+    static char referenceMark{ board[0][0] };
     for (int row = 0; row < 3; row++) {
         if (board[row][0] != ' ' &&
             board[row][0] == board[row][1] &&
@@ -196,7 +206,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
                     board[row][col] = 'X';
-                    int val = minimax(board, false, depth + 1);
+                    int val = minimax(board, true, depth + 1);
                     board[row][col] = ' ';
                     //std::cout << "bestScore: " << bestScore << "\n";
                     if (val <= bestScore) {
@@ -214,7 +224,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
                     board[row][col] = 'O';
-                    int val = minimax(board, true, depth + 1);
+                    int val = minimax(board, false, depth + 1);
                     board[row][col] = ' ';
                     //std::cout << "bestScore: " << bestScore << "\n";
                     if (val >= bestScore) {
@@ -235,10 +245,10 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
     for (int row = 0; row < 3; row++) {
         for (int col = 0; col < 3; col++) {
             if (board[row][col] == ' ') {
-                //std::cout << "\nchecking position " << row << ", " << col << "\n";
+                std::cout << "\nchecking position " << row << ", " << col << "\n";
                 board[row][col] = 'O';
                 score = minimax(board, true, 0);
-                //std::cout << "score: " << score << "\n";
+                std::cout << "score: " << score << "\n";
                 board[row][col] = ' ';
                 if (score >= bestScore) {
                     bestScore = score;
@@ -266,8 +276,6 @@ int	main() {
     do {
         static std::string currentPlayer{ "Player 1 (X's)" };
         static int squareNum{};
-        static UpdateStatus updateStatus{ success };
-        errorMessage = "";
 
         clearConsole();
         printExampleBoard();
@@ -278,24 +286,18 @@ int	main() {
 
         if (currentPlayer == "Player 1 (X's)") {
             std::cin >> squareNum;
-            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            //auto bestMove = findBestMove(board);
-            //squareNum = getSquareNum(bestMove.first, bestMove.second);
-            ////std::cout << "\nChosen square: " << squareNum;
-            ////std::cout << squareNum;
-            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            ////std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
         else if (currentPlayer == "Player 2 (O's)") {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             auto bestMove = findBestMove(board);
             squareNum = getSquareNum(bestMove.first, bestMove.second);
-            //std::cout << "\nChosen square: " << squareNum;
+            std::cout << "\nChosen square: " << squareNum;
             //std::cout << squareNum;
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            //std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
+            std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
 
+        static UpdateStatus updateStatus{ success };
         updateStatus = updateBoard(board, squareNum, (currentPlayer == "Player 1 (X's)"));
         if (updateStatus == success) {
             errorMessage = "";
