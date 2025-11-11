@@ -6,4 +6,4 @@ You can compile it yourself if you got a C++ compiler (here's a [compiler](https
 
 Or check out the release if you like downloading excutables.
 
-[preview](tic-tac-toe.gif)
+![tic-tac-toe](https://github.com/user-attachments/assets/3118d9a1-a1bb-4799-b2a0-df9889333fe7)
