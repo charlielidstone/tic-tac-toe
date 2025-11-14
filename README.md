@@ -2,7 +2,7 @@
 
 Console-based tic-tac-toe game written in C++.
 
-You can compile it yourself if you got a C++ compiler (here's a [compiler](https://www.msys2.org/) if you are on Windows). <a href="https://www.msys2.org/" target="_blank">compiler</a>
+You can compile it yourself if you got a C++ compiler (here's a <a href="https://www.msys2.org/" target="_blank">compiler</a> if you are on Windows). 
 
 
 Or check out the release if you like downloading excutables.
