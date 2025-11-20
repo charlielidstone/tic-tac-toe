@@ -21,8 +21,8 @@
 #include <chrono>
 
 /**
- * @brief Prints the current 3×3 tic-tac-toe board to the console.
- * @param board 3×3 array representing the current game state.
+ * @brief Prints the current 3ï¿½3 tic-tac-toe board to the console.
+ * @param board 3ï¿½3 array representing the current game state.
  */ 
 static void printBoard(char board[3][3]) {
     for (int row = 0; row < 3; row++) {
@@ -37,7 +37,7 @@ static void printBoard(char board[3][3]) {
 
 /**
  * @brief Checks if there are any empty spaces left on the board.
- * @param board 3×3 array representing the current game state.
+ * @param board 3ï¿½3 array representing the current game state.
  * @return True if at least one empty space (' ') exists, false otherwise.
  */
 static bool isMovesLeft(char board[3][3]) {
@@ -52,7 +52,7 @@ static bool isMovesLeft(char board[3][3]) {
 }
 
 /**
- * @brief Prints an example tic-tac-toe board with numbered positions (1–9).
+ * @brief Prints an example tic-tac-toe board with numbered positions (1ï¿½9).
  */
 static void printExampleBoard() {
     std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+--\n 7 | 8 | 9 \n\n";
@@ -77,8 +77,8 @@ enum UpdateStatus {
 };
 
 /**
- * @brief Converts a square number (1–9) to its corresponding board coordinates.
- * @param squareNum Board position (1–9).
+ * @brief Converts a square number (1ï¿½9) to its corresponding board coordinates.
+ * @param squareNum Board position (1ï¿½9).
  * @return Pair (x, y) representing row and column indices.
  */
 static std::pair<int, int> getCoordinates(int squareNum) {
@@ -96,9 +96,9 @@ static std::pair<int, int> getCoordinates(int squareNum) {
 }
 
 /**
- * @brief Converts board coordinates to the corresponding square number (1–9).
- * @param x Row index (0–2).
- * @param y Column index (0–2).
+ * @brief Converts board coordinates to the corresponding square number (1ï¿½9).
+ * @param x Row index (0ï¿½2).
+ * @param y Column index (0ï¿½2).
  * @return Square number corresponding to the given coordinates.
  */
 static int getSquareNum(int x, int y) {
@@ -117,8 +117,8 @@ static int getSquareNum(int x, int y) {
 
 /**
  * @brief Updates the board with the current player's move
- * @param board, Reference to the 3×3 board array containing 'X', 'O', or ' '.
- * @param squareNum, The target square number (1–9) for the move.
+ * @param board, Reference to the 3ï¿½3 board array containing 'X', 'O', or ' '.
+ * @param squareNum, The target square number (1ï¿½9) for the move.
  * @param isP1 True for Player 1 ('X'), false for Player 2 ('O').
  * @return UpdateStatus: success, failInvalidInput, failSpaceOccupied, or failUnknownError.
  */
@@ -146,7 +146,7 @@ static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1) {
         return failUnknownError;
 }
 
-/*
+/**
 * @brief determines the state of the game for the given board
 * @param board, reference to 2D array representing 3x3 game board
 * @return 10 if the board is a win for O, -10 if it is a win for X, 0 otherwise
