@@ -39,6 +39,7 @@ void print_title();
 
 int main() {
     print_title();
+    runGame();
     return 0;
 }
 
@@ -215,7 +216,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
     if (!isMovesLeft(board)) return 0;
 
     if (isMax) {
-        int bestScore = std::numeric_limits<int>::max();;
+        int bestScore = std::numeric_limits<int>::max();
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
