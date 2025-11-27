@@ -1,15 +1,11 @@
 /**
-* @brief a little tic-tac-toe game in the console made with a minimax algorithm
-* @author Charlie Lidstone
-*/
-
-/*
-* the logic must be messed up somewhere because the bot sometimes loses
-* it loses when we play any of the following: 
-* 3, 7, 1, 2
-* 1, 3, 7, 5
-* 1, 5, 7, 3
+*  ___  _  __   ___  _   __   ___ _  ___
+* |_ _|| |/ _| |_ _|/ \ / _| |_ _/ \| __|
+*  | | | ( (_   | || o ( (_   | ( o ) _|
+*  |_| |_|\__|  |_||_n_|\__|  |_|\_/|___|
 * 
+* @brief a little tic-tac-toe game in the console made with a mini-max algorithm
+* @author Charlie Lidstone
 */
 
 #include <iostream>
@@ -39,9 +35,11 @@ static int evaluateBoard(char (&board)[3][3]);
 static int minimax(char(&board)[3][3], bool isMax, int depth);
 static std::pair<int, int> findBestMove(char(&board)[3][3]);
 static int runGame();
+void print_title();
 
 int main() {
-    return runGame();
+    print_title();
+    return 0;
 }
 
 /**
@@ -361,4 +359,8 @@ static int runGame() {
     }
 
     return 0;
+}
+
+void print_title() {
+    printf("\n ___  _  __   ___  _   __   ___ _  ___\n|_ _|| |/ _| |_ _|/ \\ / _| |_ _/ \\| __|\n | | | ( (_   | || o ( (_   | ( o ) _|\n |_| |_|\\__|  |_||_n_|\\__|  |_|\\_/|___|\n");
 }
