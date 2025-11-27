@@ -20,6 +20,30 @@
 #include <thread>
 #include <chrono>
 
+enum UpdateStatus {
+    success,
+    failSpaceOccupied,
+    failInvalidInput,
+    failUnknownError,
+};
+
+static void printBoard(char board[3][3]);
+static bool isMovesLeft(char board[3][3]);
+static void printExampleBoard();
+static void printErrorLog(const std::vector<std::string>& errorLog);
+static void clearConsole();
+static std::pair<int, int> getCoordinates(int squareNum);
+static int getSquareNum(int x, int y);
+static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1);
+static int evaluateBoard(char (&board)[3][3]);
+static int minimax(char(&board)[3][3], bool isMax, int depth);
+static std::pair<int, int> findBestMove(char(&board)[3][3]);
+static int runGame();
+
+int main() {
+    return runGame();
+}
+
 /**
  * @brief Prints the current 3�3 tic-tac-toe board to the console.
  * @param board 3�3 array representing the current game state.
@@ -68,13 +92,6 @@ static void printErrorLog(const std::vector<std::string>& errorLog) {
 static void clearConsole() {
     std::cout << "\033[2J\033[1;1H";
 }
-
-enum UpdateStatus {
-    success,
-    failSpaceOccupied,
-    failInvalidInput,
-    failUnknownError,
-};
 
 /**
  * @brief Converts a square number (1�9) to its corresponding board coordinates.
@@ -191,7 +208,7 @@ static int evaluateBoard(char (&board)[3][3]) {
 static int minimax(char(&board)[3][3], bool isMax, int depth) {
     int score = evaluateBoard(board);
 
-	//std::cout << "depth: " << depth << std::endl;
+    //std::cout << "depth: " << depth << std::endl;
 
     // we subract the depth because we want to prioritise the moves that are closest to the top of the tree
     if (score == 10) return score - depth;
@@ -206,7 +223,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
                     board[row][col] = 'X';
-                    int val = minimax(board, true, depth + 1);
+                    int val = minimax(board, false, depth + 1);
                     board[row][col] = ' ';
                     //std::cout << "bestScore: " << bestScore << "\n";
                     if (val <= bestScore) {
@@ -224,7 +241,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
                     board[row][col] = 'O';
-                    int val = minimax(board, false, depth + 1);
+                    int val = minimax(board, true, depth + 1);
                     board[row][col] = ' ';
                     //std::cout << "bestScore: " << bestScore << "\n";
                     if (val >= bestScore) {
@@ -261,7 +278,7 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
     return bestMove;
 }
 
-int	main() {
+static int runGame() {
     bool isGameOver{ false };
 
     // board[row][col]
@@ -286,15 +303,22 @@ int	main() {
 
         if (currentPlayer == "Player 1 (X's)") {
             std::cin >> squareNum;
+            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            //auto bestMove = findBestMove(board);
+            //squareNum = getSquareNum(bestMove.first, bestMove.second);
+            ////std::cout << "\nChosen square: " << squareNum;
+            ////std::cout << squareNum;
+            //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            ////std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
         else if (currentPlayer == "Player 2 (O's)") {
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             auto bestMove = findBestMove(board);
             squareNum = getSquareNum(bestMove.first, bestMove.second);
-            std::cout << "\nChosen square: " << squareNum;
+            //std::cout << "\nChosen square: " << squareNum;
             //std::cout << squareNum;
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
+            //std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
 
         static UpdateStatus updateStatus{ success };
@@ -324,10 +348,12 @@ int	main() {
     printExampleBoard();
     printBoard(board);
     if (evaluateBoard(board) == +10) {
-        std::cout << "\nGood game! Player 0 wins!" << std::endl;
-    } else if (evaluateBoard(board) == -10) {
         std::cout << "\nGood game! Player 1 wins!" << std::endl;
-    } else if (evaluateBoard(board) == 0) {
+    }
+    else if (evaluateBoard(board) == -10) {
+        std::cout << "\nGood game! Player 2 wins!" << std::endl;
+    }
+    else if (evaluateBoard(board) == 0) {
         std::cout << "\nGood game! It's a TIE!" << std::endl;
     }
     else {
