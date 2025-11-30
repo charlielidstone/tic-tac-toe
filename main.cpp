@@ -8,6 +8,11 @@
 * @author Charlie Lidstone
 */
 
+/*
+* less than ideal scenarios:
+* - when the computer goes first, and the user goes 2->5, the bot doesn't take the win
+*/
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -34,12 +39,13 @@ static UpdateStatus updateBoard(char(&board)[3][3], int squareNum, bool isP1);
 static int evaluateBoard(char (&board)[3][3]);
 static int minimax(char(&board)[3][3], bool isMax, int depth);
 static std::pair<int, int> findBestMove(char(&board)[3][3]);
-static int runGame();
-void print_title();
+static int playGame();
+static void printTitle();
+static void printRepeatedChar(std::string c, int n);
 
 int main() {
-    print_title();
-    runGame();
+    printTitle();
+    playGame();
     return 0;
 }
 
@@ -261,10 +267,10 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
     for (int row = 0; row < 3; row++) {
         for (int col = 0; col < 3; col++) {
             if (board[row][col] == ' ') {
-                //std::cout << "\nchecking position " << row << ", " << col << "\n";
+                std::cout << "\nchecking position " << row << ", " << col << "\n";
                 board[row][col] = 'O';
                 score = minimax(board, true, 0);
-                //std::cout << "score: " << score << "\n";
+                std::cout << "score: " << score << "\n";
                 board[row][col] = ' ';
                 if (score >= bestScore) {
                     bestScore = score;
@@ -277,7 +283,7 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
     return bestMove;
 }
 
-static int runGame() {
+static int playGame() {
     bool isGameOver{ false };
 
     // board[row][col]
@@ -301,23 +307,22 @@ static int runGame() {
         std::cout << "\n" << currentPlayer << ", where would you like to go ? : ";
 
         if (currentPlayer == "Player 1 (X's)") {
+            //std::cin >> squareNum;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            auto bestMove = findBestMove(board);
+            squareNum = getSquareNum(bestMove.first, bestMove.second);
+            std::cout << "\nChosen square: " << squareNum;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
+        }
+        else if (currentPlayer == "Player 2 (O's)") {
             std::cin >> squareNum;
             //std::this_thread::sleep_for(std::chrono::milliseconds(500));
             //auto bestMove = findBestMove(board);
             //squareNum = getSquareNum(bestMove.first, bestMove.second);
             ////std::cout << "\nChosen square: " << squareNum;
-            ////std::cout << squareNum;
             //std::this_thread::sleep_for(std::chrono::milliseconds(500));
             ////std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
-        }
-        else if (currentPlayer == "Player 2 (O's)") {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            auto bestMove = findBestMove(board);
-            squareNum = getSquareNum(bestMove.first, bestMove.second);
-            //std::cout << "\nChosen square: " << squareNum;
-            //std::cout << squareNum;
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            //std::cout << "\nbestMove: " << bestMove.first << ", " << bestMove.second;
         }
 
         static UpdateStatus updateStatus{ success };
@@ -362,6 +367,29 @@ static int runGame() {
     return 0;
 }
 
-void print_title() {
+/**
+ * @brief prints the ascii title
+ */
+static void printTitle() {
     printf("\n ___  _  __   ___  _   __   ___ _  ___\n|_ _|| |/ _| |_ _|/ \\ / _| |_ _/ \\| __|\n | | | ( (_   | || o ( (_   | ( o ) _|\n |_| |_|\\__|  |_||_n_|\\__|  |_|\\_/|___|\n");
+}
+
+static void playingScreen() {
+
+}
+
+static void printHeading(std::string text, std::string borderChar, int marginRight) {
+    printRepeatedChar(" ", marginRight);
+    printRepeatedChar(borderChar, text.length());
+    std::cout << text;
+}
+
+static void printRepeatedChar(std::string c, int n) {
+    for (int i = 0; i < n; i++) {
+        std::cout << c;
+    }
+}
+
+static void printMenuScreen() {
+    printHeading("Tic Tac Toe", "-", 2);
 }
