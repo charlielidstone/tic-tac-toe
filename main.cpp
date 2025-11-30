@@ -44,8 +44,8 @@ int main() {
 }
 
 /**
- * @brief Prints the current 3�3 tic-tac-toe board to the console.
- * @param board 3�3 array representing the current game state.
+ * @brief Prints the current 3x3 tic-tac-toe board to the console.
+ * @param board 3x3 array representing the current game state.
  */ 
 static void printBoard(char board[3][3]) {
     for (int row = 0; row < 3; row++) {
@@ -60,7 +60,7 @@ static void printBoard(char board[3][3]) {
 
 /**
  * @brief Checks if there are any empty spaces left on the board.
- * @param board 3�3 array representing the current game state.
+ * @param board 3x3 array representing the current game state.
  * @return True if at least one empty space (' ') exists, false otherwise.
  */
 static bool isMovesLeft(char board[3][3]) {
@@ -75,7 +75,7 @@ static bool isMovesLeft(char board[3][3]) {
 }
 
 /**
- * @brief Prints an example tic-tac-toe board with numbered positions (1�9).
+ * @brief Prints an example tic-tac-toe board with numbered positions (1-9).
  */
 static void printExampleBoard() {
     std::cout << " 1 | 2 | 3\n---+---+---\n 4 | 5 | 6\n---+---+--\n 7 | 8 | 9 \n\n";
@@ -93,8 +93,8 @@ static void clearConsole() {
 }
 
 /**
- * @brief Converts a square number (1�9) to its corresponding board coordinates.
- * @param squareNum Board position (1�9).
+ * @brief Converts a square number (1-9) to its corresponding board coordinates.
+ * @param squareNum Board position (1-9).
  * @return Pair (x, y) representing row and column indices.
  */
 static std::pair<int, int> getCoordinates(int squareNum) {
@@ -112,9 +112,9 @@ static std::pair<int, int> getCoordinates(int squareNum) {
 }
 
 /**
- * @brief Converts board coordinates to the corresponding square number (1�9).
- * @param x Row index (0�2).
- * @param y Column index (0�2).
+ * @brief Converts board coordinates to the corresponding square number (1-9).
+ * @param x Row index (0-2).
+ * @param y Column index (0-2).
  * @return Square number corresponding to the given coordinates.
  */
 static int getSquareNum(int x, int y) {
