@@ -20,6 +20,7 @@
 #include <limits>
 #include <thread>
 #include <chrono>
+#include <fstream>
 
 enum UpdateStatus {
     success,
@@ -42,6 +43,10 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]);
 static int playGame();
 static void printTitle();
 static void printRepeatedChar(std::string c, int n);
+
+static void logDebugState(std::string playerChar, std::pair<int, int> position, int depth, int score);
+
+std::ofstream log_file("log.txt");
 
 int main() {
     printTitle();
@@ -227,6 +232,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
+                    logDebugState("X", {row, col}, depth, score);
                     board[row][col] = 'X';
                     int val = minimax(board, false, depth + 1);
                     board[row][col] = ' ';
@@ -245,6 +251,7 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
+                    logDebugState("O", { row, col }, depth, score);
                     board[row][col] = 'O';
                     int val = minimax(board, true, depth + 1);
                     board[row][col] = ' ';
@@ -392,4 +399,11 @@ static void printRepeatedChar(std::string c, int n) {
 
 static void printMenuScreen() {
     printHeading("Tic Tac Toe", "-", 2);
+}
+
+static void logDebugState(std::string playerChar, std::pair<int, int> position, int depth, int score) {
+    if (depth == 0) {
+        log_file << "-------------------------------------------------------------------\n";
+    }
+    log_file << "'" << playerChar << "' -> " << "[" << position.first << ", " << position.second << "] " << "depth: " << depth << ", score: " << score << "\n";
 }
