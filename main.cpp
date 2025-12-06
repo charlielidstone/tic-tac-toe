@@ -59,20 +59,7 @@ int main() {
     return 0;
 }
 
-/**
- * @brief Prints the current 3x3 tic-tac-toe board to the console.
- * @param board 3x3 array representing the current game state.
- */ 
-static void printBoard(char board[3][3]) {
-    for (int row = 0; row < 3; row++) {
-        std::cout << " " << board[row][0] << " | "
-            << board[row][1]
-            << " | " << board[row][2] << " \n";
-        if (row < 2) {
-            std::cout << "---+---+---\n";
-        }
-    }
-}
+
 
 /**
  * @brief Checks if there are any empty spaces left on the board.
@@ -293,6 +280,17 @@ static std::pair<int, int> findBestMove(char(&board)[3][3]) {
     }
 
     return bestMove;
+}
+
+static void printBoard(char board[3][3]) {
+    for (int row = 0; row < 3; row++) {
+        std::cout << " " << board[row][0] << " | "
+            << board[row][1]
+            << " | " << board[row][2] << " \n";
+        if (row < 2) {
+            std::cout << "---+---+---\n";
+        }
+    }
 }
 
 static int playGame() {
