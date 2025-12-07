@@ -1,3 +1,6 @@
+#ifndef ENGINE_HPP
+#define ENGINE_HPP
+
 #include <utility>
 #include "board.hpp"
 
@@ -15,11 +18,6 @@ private:
 	* @return an integer representing the score the the given position
 	*/
 	int minimax(Board board, bool isMax, int depth);
-    
-	/**
-	* @brief determines the state of the game for the given board
-	* @param board, reference to 2D array representing 3x3 game board
-	* @return 10 if the board is a win for O, -10 if it is a win for X, 0 otherwise
-	*/
-	int evaluateBoard(Board board);
 };
+
+#endif

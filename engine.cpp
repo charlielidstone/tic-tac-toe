@@ -5,53 +5,24 @@
 Engine::Engine() {
 }
 
-int Engine::evaluateBoard(Board board) {
-    for (int row = 0; row < 3; row++) {
-        if (board[row][0] != ' ' &&
-            board[row][0] == board[row][1] &&
-            board[row][1] == board[row][2]) {
-            return board[row][0] == 'O' ? +10 : -10;
-        }
-    }
-    for (int col = 0; col < 3; col++) {
-        if (board[0][col] != ' ' &&
-            board[0][col] == board[1][col] &&
-            board[1][col] == board[2][col]) {
-            return board[0][col] == 'O' ? +10 : -10;
-        }
-    }
-    if (board[0][0] != ' ' &&
-        board[0][0] == board[1][1] &&
-        board[1][1] == board[2][2]) {
-        return board[0][0] == 'O' ? +10 : -10;
-    }
-    if (board[0][2] != ' ' &&
-        board[0][2] == board[1][1] &&
-        board[1][1] == board[2][0]) {
-        return board[0][2] == 'O' ? +10 : -10;
-    }
-
-    return 0;
-}
-
 int Engine::minimax(Board board, bool isMax, int depth) {
-    int score = evaluateBoard(board);
+    int score = board.evaluate();
 
     // we subract the depth because we want to prioritise the moves that are closest to the top of the tree
     if (score == 10) return score - depth;
     if (score == -10) return score + depth;
 
-    if (!Board::isMovesLeft()) return 0;
+    if (!board.isMovesLeft()) return 0;
 
     if (isMax) {
         int bestScore = std::numeric_limits<int>::max();
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
-                if (board[row][col] == ' ') {
-                    board[row][col] = 'X';
+                if (board.getCell(row, col) == ' ') {
+                    board.setCell(row, col, 'X');
                     int val = minimax(board, false, depth + 1);
-                    board[row][col] = ' ';
+                    board.setCell(row, col, ' ');
                     if (val <= bestScore) {
                         bestScore = val;
                     }
