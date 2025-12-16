@@ -20,12 +20,14 @@ class Board {
         */
         int evaluate() const;
         enum UpdateStatus {
+            notUpdated,
             success,
             failSpaceOccupied,
             failInvalidInput,
             failUnknownError,
         };
 		UpdateStatus updateBoard(int squareNum, char value);
+		UpdateStatus updateStatus = notUpdated;
         void handleError(Board::UpdateStatus updateStatus, int squareNum, std::string* errorMessage);
         void setCell(int row, int col, char value);
 	    void setCell(int squareNum, char value);

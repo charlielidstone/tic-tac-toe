@@ -4,15 +4,13 @@
 #include "board.hpp"
 #include "utils.hpp"
 
-Board::Board() {
+Board::Board() : updateStatus(notUpdated) {
 	for (auto &row : grid) {
 		row.fill(' ');
 	}
 }
 
-Board::Board(const std::array<std::array<char, 3>, 3> &initialBoard) {
-    grid = initialBoard;
-}
+Board::Board(const std::array<std::array<char, 3>, 3> &initialBoard) : updateStatus(notUpdated), grid(initialBoard) {}
 
 void Board::print() {
     for (int row = 0; row < grid.size(); row++) {
@@ -67,7 +65,7 @@ Board::UpdateStatus Board::updateBoard(int squareNum, char value) {
     std::pair<int, int> position = utils::getPair(squareNum);
     int row = position.first;
     int col = position.second;
-    if (squareNum < 1 || squareNum > 9) {
+    if (squareNum < 1 || squareNum > 9 || isalpha(squareNum)) {
         return failInvalidInput;
     }
     if (grid[row][col] != ' ') {

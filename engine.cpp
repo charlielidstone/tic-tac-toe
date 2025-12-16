@@ -1,5 +1,6 @@
 #include <limits>
-
+#include <thread>
+#include <chrono>
 #include "engine.hpp"
 
 Engine::Engine() {
@@ -51,6 +52,8 @@ int Engine::minimax(Board board, bool isMax, int depth) {
 }
 
 std::pair<int, int> Engine::findBestMove(Board board) {
+	std::chrono::milliseconds time(artificialDelay);
+	std::this_thread::sleep_for(time);
     std::pair<int, int> bestMove = { -1, -1 };
     int bestScore = std::numeric_limits<int>::min();
     int score{};

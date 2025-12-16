@@ -33,7 +33,9 @@ void Game::start() {
     std::string errorMessage{ "" };
 
     do {
-        static int squareNum{};
+		board.updateStatus = Board::UpdateStatus::notUpdated;
+
+        int squareNum{};
 
         utils::clearScreen();
         board.printExampleBoard();
@@ -50,7 +52,8 @@ void Game::start() {
 			board.handleError(updateStatus, squareNum, &errorMessage);
         }
 
-        isOver = board.evaluate() || !board.isMovesLeft();
+        int eval = board.evaluate();
+        isOver = (eval != 0)  || !board.isMovesLeft();
 
     } while (!isOver);
 
