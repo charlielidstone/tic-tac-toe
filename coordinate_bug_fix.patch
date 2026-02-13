@@ -1,0 +1,36 @@
+diff --git a/game.hpp b/game.hpp
+index cb94dcf..adae20b 100644
+--- a/game.hpp
++++ b/game.hpp
+@@ -1,6 +1,7 @@
+ #ifndef GAME_HPP
+ #define GAME_HPP
+ 
++#include <memory>
+ #include "player.hpp"
+ 
+ class Game {
+diff --git a/utils.cpp b/utils.cpp
+index d66c145..baa0578 100644
+--- a/utils.cpp
++++ b/utils.cpp
+@@ -6,7 +6,17 @@ namespace utils {
+ 	void clearScreen() {
+ 		std::cout << "\033[2J\033[1;1H";
+ 	}
+ 	int getSquareNum(int x, int y) {
+-		return y * 3 + x + 1;
++		int squareNum{};
++		
++		if (x == 2) squareNum = 7;
++		if (x == 1) squareNum = 4;
++		if (x == 0) squareNum = 1;
++		
++		if (y == 0) squareNum += 0;
++		if (y == 1) squareNum += 1;
++		if (y == 2) squareNum += 2;
++		
++		return squareNum;
+ 	}
+     std::pair<int, int> getPair(int squareNum) {
+         int x{};
