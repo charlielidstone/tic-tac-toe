@@ -364,4 +364,7 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
-FodyWeavers.xsdtic-tac-toe
+FodyWeavers.xsd
+
+# Compiled binary
+tic-tac-toe
