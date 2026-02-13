@@ -234,7 +234,7 @@ std::pair<int, int> Engine::findBestMove(Board board) {
 **Master Branch** (`getSquareNum`, lines 136-148):
 ```cpp
 static int getSquareNum(int x, int y) {
-    int squareNum{};  // Uninitialized - undefined behavior if no conditions match!
+    int squareNum{};  // Value-initialized to 0
     if (x == 2) squareNum = 7;
     if (x == 1) squareNum = 4;
     if (x == 0) squareNum = 1;
@@ -284,7 +284,7 @@ The breaking-it-up version treats the board as:
 ```
 Where y = row, x = column (transposed!)
 
-**Additional Bug**: The master version uses uninitialized `squareNum` which could cause undefined behavior if invalid coordinates are passed.
+**Additional Issue**: The master version value-initializes `squareNum` to 0. If invalid coordinates are passed (x or y outside 0-2 range), the function will return 0, which is not a valid square number (valid range is 1-9). This could lead to silent errors rather than catching invalid input.
 
 **Impact**: This inconsistency means the breaking-it-up branch has a critical bug in coordinate conversion that would cause the AI to make moves in the wrong positions! However, since `getPair()` (the inverse function) likely has the same transposition, they may cancel out within the breaking-it-up codebase.
 
@@ -347,7 +347,7 @@ This is **CORRECT**! The refactored branch properly associates +10 with Player 2
 
 ### ⚠️ Critical Issues Found in BOTH Branches
 1. **Confusing minimax naming**: The `isMax` parameter name is backwards - when true, it minimizes; when false, it maximizes. The algorithm works correctly despite this misleading naming.
-2. **Uninitialized variable**: Master branch's `getSquareNum` uses an uninitialized variable, risking undefined behavior.
+2. **Poor error handling**: Master branch's `getSquareNum` returns 0 for invalid coordinates, which is not a valid square number (1-9).
 3. **Coordinate system inconsistency**: The two branches use different coordinate mappings (row-major vs column-major), though this may be internally consistent within each branch.
 
 ### 🔧 Improvements in breaking-it-up
@@ -376,7 +376,7 @@ This is **CORRECT**! The refactored branch properly associates +10 with Player 2
 
 4. **Fix confusing naming**: Consider renaming the `isMax` parameter in minimax to `isMinimizing` or inverting the logic to match the name. This would prevent future confusion.
 
-5. **Initialize variables**: Fix the uninitialized `squareNum` in master's `getSquareNum` function by adding `int squareNum = 0;` or ensuring all code paths assign a value.
+5. **Better error handling**: Add bounds checking and proper error handling for invalid coordinates rather than returning 0 (which is not a valid square number).
 
 6. **Performance**: For a 3x3 tic-tac-toe game, performance differences are negligible. The architectural benefits of `breaking-it-up` far outweigh any minor performance considerations.
 
@@ -401,7 +401,7 @@ This is **CORRECT**! The refactored branch properly associates +10 with Player 2
 
 2. **⚠️ Confusing variable naming**: Both branches use misleading parameter names in the minimax function (`isMax` when it actually minimizes). While this doesn't break functionality, it creates confusion and should be fixed.
 
-3. **⚠️ Uninitialized variable**: Master branch has potential undefined behavior in `getSquareNum`.
+3. **⚠️ Poor error handling**: Master branch returns 0 (invalid square number) for out-of-range coordinates instead of properly handling the error.
 
 ### Final Recommendation:
 
