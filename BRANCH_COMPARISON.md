@@ -88,9 +88,11 @@ int Board::evaluate() const {
 
 **Functionally Identical** - Both implementations:
 - Use depth-adjusted scoring (prioritize faster wins)
-- Implement the same minimax logic with alpha-beta principles
+- Implement the same minimax logic
 - Use 'X' as minimizing player, 'O' as maximizing player
 - Return depth-adjusted scores (+10 - depth for O wins, -10 + depth for X wins)
+
+**⚠️ CRITICAL BUG FOUND**: Both branches have the minimax variable naming backwards! When `isMax` is true, it initializes `bestScore` to `max()` and uses `<=` comparison, which is actually MINIMIZING behavior. The variable name `isMax` is misleading - it should be called `isMinimizing` based on what the code actually does.
 
 **Master Branch** (lines 222-271):
 ```cpp
@@ -102,16 +104,16 @@ static int minimax(char(&board)[3][3], bool isMax, int depth) {
     
     if (!isMovesLeft(board)) return 0;
     
-    if (isMax) {
-        int bestScore = std::numeric_limits<int>::max();
+    if (isMax) {  // MISLEADING NAME! This actually minimizes
+        int bestScore = std::numeric_limits<int>::max();  // Start high for minimizing
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 if (board[row][col] == ' ') {
-                    board[row][col] = 'X';
+                    board[row][col] = 'X';  // X is minimizing player
                     int val = minimax(board, false, depth + 1);
                     logDebugState({ row, col }, board, depth, score); // logging
                     board[row][col] = ' ';
-                    if (val <= bestScore) {
+                    if (val <= bestScore) {  // Minimize!
                         bestScore = val;
                     }
                 }
@@ -157,6 +159,8 @@ int Engine::minimax(Board board, bool isMax, int depth) {
 1. **Board passing**: Master uses reference to raw array; breaking-it-up passes Board object by value (making a copy for each recursive call)
 2. **Cell access**: Refactored version uses `getCell()` and `setCell()` methods
 3. **Debug logging**: Master includes debug logging calls; refactored version removed them
+
+**Note on Confusing Variable Naming**: The parameter `isMax` in both implementations is misleading. When `isMax=true`, the code places 'X' and MINIMIZES the score. When `isMax=false`, it places 'O' and MAXIMIZES. The name suggests the opposite of what it does. Despite this confusing naming, the algorithm works correctly because it's consistently applied.
 
 ### 3. Best Move Selection (`findBestMove`)
 
@@ -225,12 +229,12 @@ std::pair<int, int> Engine::findBestMove(Board board) {
 
 ### 4. Coordinate Conversion
 
-**Functionally Different (Bug Fix!)**
+**⚠️ CRITICAL BUG: These functions are NOT equivalent!**
 
 **Master Branch** (`getSquareNum`, lines 136-148):
 ```cpp
 static int getSquareNum(int x, int y) {
-    int squareNum{};
+    int squareNum{};  // Uninitialized - undefined behavior if no conditions match!
     if (x == 2) squareNum = 7;
     if (x == 1) squareNum = 4;
     if (x == 0) squareNum = 1;
@@ -250,7 +254,39 @@ int getSquareNum(int x, int y) {
 }
 ```
 
-**Analysis**: The refactored version uses a mathematical formula that is more concise and less error-prone. Both should produce the same results, but the refactored version is cleaner.
+**Analysis**: These functions produce **DIFFERENT** results! Testing reveals:
+
+| x,y | Master Result | Breaking-it-up Result |
+|-----|---------------|----------------------|
+| 0,0 | 1 | 1 | ✓ Match
+| 0,1 | 2 | 4 | ✗ Different!
+| 0,2 | 3 | 7 | ✗ Different!
+| 1,0 | 4 | 2 | ✗ Different!
+| 1,1 | 5 | 5 | ✓ Match
+| 1,2 | 6 | 8 | ✗ Different!
+| 2,0 | 7 | 3 | ✗ Different!
+| 2,1 | 8 | 6 | ✗ Different!
+| 2,2 | 9 | 9 | ✓ Match
+
+The master version treats the board as:
+```
+1 2 3    (x=0, y=0-2)
+4 5 6    (x=1, y=0-2)  
+7 8 9    (x=2, y=0-2)
+```
+Where x = row, y = column
+
+The breaking-it-up version treats the board as:
+```
+1 4 7    (y=0, x=0-2)
+2 5 8    (y=1, x=0-2)
+3 6 9    (y=2, x=0-2)
+```
+Where y = row, x = column (transposed!)
+
+**Additional Bug**: The master version uses uninitialized `squareNum` which could cause undefined behavior if invalid coordinates are passed.
+
+**Impact**: This inconsistency means the breaking-it-up branch has a critical bug in coordinate conversion that would cause the AI to make moves in the wrong positions! However, since `getPair()` (the inverse function) likely has the same transposition, they may cancel out within the breaking-it-up codebase.
 
 **Master Branch** (`getCoordinates`, lines 116-128) and **Breaking-it-up** (`getPair`, lines 11-23) are functionally identical but with different names.
 
@@ -304,10 +340,15 @@ This is **CORRECT**! The refactored branch properly associates +10 with Player 2
 
 ## Summary of Differences
 
-### ✅ Identical Core Logic
-- **Minimax algorithm**: Same logic, depth handling, and scoring
+### ✅ Functionally Equivalent Core Logic
+- **Minimax algorithm**: Same logic, depth handling, and scoring (despite confusing variable naming)
 - **Board evaluation**: Same win detection for rows, columns, diagonals
 - **Best move selection**: Same approach to finding optimal moves
+
+### ⚠️ Critical Issues Found in BOTH Branches
+1. **Confusing minimax naming**: The `isMax` parameter name is backwards - when true, it minimizes; when false, it maximizes. The algorithm works correctly despite this misleading naming.
+2. **Uninitialized variable**: Master branch's `getSquareNum` uses an uninitialized variable, risking undefined behavior.
+3. **Coordinate system inconsistency**: The two branches use different coordinate mappings (row-major vs column-major), though this may be internally consistent within each branch.
 
 ### 🔧 Improvements in breaking-it-up
 - **Object-oriented design**: Better separation of concerns
@@ -323,6 +364,7 @@ This is **CORRECT**! The refactored branch properly associates +10 with Player 2
 ### ⚠️ Potential Concerns in breaking-it-up
 - **Board copying**: Minimax passes Board by value (copies entire board each recursion). Master passed by reference. This could impact performance slightly, though for a 3x3 board it's negligible.
 - **Removed debug logging**: No more detailed debug output to log.txt
+- **Coordinate system change**: Uses different x/y interpretation than master (column-major vs row-major). This needs verification to ensure it doesn't break gameplay.
 
 ## Recommendations
 
@@ -330,19 +372,39 @@ This is **CORRECT**! The refactored branch properly associates +10 with Player 2
 
 2. **Win condition bug**: The `master` branch has the win messages reversed. This is fixed in `breaking-it-up`.
 
-3. **Performance**: For a 3x3 tic-tac-toe game, performance differences are negligible. The architectural benefits of `breaking-it-up` far outweigh any minor performance considerations.
+3. **⚠️ URGENT - Verify coordinate conversion**: The coordinate conversion logic differs between branches. Before using `breaking-it-up`, thoroughly test that AI moves go to the intended board positions. The different coordinate mappings could cause subtle bugs.
 
-4. **Debug logging**: If detailed debug logging is needed, consider adding it back to the Engine class in `breaking-it-up` as an optional feature.
+4. **Fix confusing naming**: Consider renaming the `isMax` parameter in minimax to `isMinimizing` or inverting the logic to match the name. This would prevent future confusion.
 
-5. **Code quality**: The `breaking-it-up` branch is more maintainable, testable, and follows better software engineering practices.
+5. **Initialize variables**: Fix the uninitialized `squareNum` in master's `getSquareNum` function by adding `int squareNum = 0;` or ensuring all code paths assign a value.
+
+6. **Performance**: For a 3x3 tic-tac-toe game, performance differences are negligible. The architectural benefits of `breaking-it-up` far outweigh any minor performance considerations.
+
+7. **Debug logging**: If detailed debug logging is needed, consider adding it back to the Engine class in `breaking-it-up` as an optional feature.
+
+8. **Code quality**: The `breaking-it-up` branch is more maintainable, testable, and follows better software engineering practices.
 
 ## Conclusion
 
-**The game logic algorithms are functionally equivalent between both branches.** The minimax algorithm, board evaluation, and move selection all work the same way. The primary differences are:
+**The core game logic algorithms (minimax and board evaluation) are functionally equivalent between both branches**, though with some important caveats:
 
-1. **Architecture**: breaking-it-up uses OOP and modular design vs monolithic procedural code
-2. **Bug fix**: Win condition messages are corrected in breaking-it-up
-3. **Code quality**: breaking-it-up removes commented code and provides better structure
-4. **Extensibility**: breaking-it-up makes it much easier to extend functionality
+### Key Findings:
 
-The `breaking-it-up` branch represents a superior implementation that maintains the same game logic while providing a much better foundation for future development.
+1. **Architecture**: breaking-it-up uses OOP and modular design vs monolithic procedural code ✓
+2. **Bug fix**: Win condition messages are corrected in breaking-it-up ✓
+3. **Code quality**: breaking-it-up removes commented code and provides better structure ✓
+4. **Extensibility**: breaking-it-up makes it much easier to extend functionality ✓
+
+### Critical Issues Requiring Attention:
+
+1. **⚠️ Coordinate system discrepancy**: The two branches use different coordinate mappings. This needs immediate verification and testing before the breaking-it-up branch can be safely deployed.
+
+2. **⚠️ Confusing variable naming**: Both branches use misleading parameter names in the minimax function (`isMax` when it actually minimizes). While this doesn't break functionality, it creates confusion and should be fixed.
+
+3. **⚠️ Uninitialized variable**: Master branch has potential undefined behavior in `getSquareNum`.
+
+### Final Recommendation:
+
+The `breaking-it-up` branch represents a superior architectural foundation, but **requires thorough testing of the coordinate system** before it can be safely used. Once the coordinate mapping is verified (or fixed if broken), it provides a much better base for future development than the master branch.
+
+The architectural improvements alone make breaking-it-up the better choice, but the coordinate conversion discrepancy must be resolved first to ensure correct gameplay.
