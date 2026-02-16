@@ -102,7 +102,7 @@ Board::UpdateStatus Board::updateBoard(int squareNum, char value) {
 
 void Board::handleError(Board::UpdateStatus updateStatus, int squareNum, std::string* errorMessage) {
     if (updateStatus == Board::UpdateStatus::failSpaceOccupied) {
-        *errorMessage = "\n" + std::to_string(squareNum) + " is already taken!";
+        *errorMessage = std::to_string(squareNum) + " is already taken!";
     }
     else if (updateStatus == Board::UpdateStatus::failInvalidInput) {
         *errorMessage = "\nPlease enter a single digit from 1 to 9.";
