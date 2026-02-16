@@ -5,9 +5,11 @@ namespace utils {
 	void clearScreen() {
 		std::cout << "\033[2J\033[1;1H";
 	}
+
 	int getSquareNum(int x, int y) {
-		return y * 3 + x + 1;
+		return x * 3 + y + 1;
 	}
+
     std::pair<int, int> getPair(int squareNum) {
         int x{};
         if (squareNum < 10 && squareNum > 6) x = 2;
