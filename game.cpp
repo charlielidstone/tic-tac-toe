@@ -38,7 +38,7 @@ void Game::start() {
         int squareNum{};
 
         utils::clearScreen();
-        board.printExampleBoard();
+        //board.printExampleBoard();
         board.print();
         std::cout << errorMessage << std::endl;
 
@@ -58,7 +58,7 @@ void Game::start() {
     } while (!isOver);
 
     utils::clearScreen();
-    board.printExampleBoard();
+    //board.printExampleBoard();
     board.print();
     if (board.evaluate() == +10) {
         std::cout << "\nGood game! Player 2 wins!" << std::endl;
