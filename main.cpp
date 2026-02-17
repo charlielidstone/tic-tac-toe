@@ -5,7 +5,7 @@
 
 int main(void) {
 
-	Game game(false);
+	Game game(true);
 	game.displayStartingScreen();
 
 	return 0;
