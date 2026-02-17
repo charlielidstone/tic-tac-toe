@@ -33,6 +33,7 @@ void Game::displayStartingScreen() {
 }
 
 void Game::start(Renderer &renderer) {
+
     isOver = false;
 
     Board board;
@@ -44,17 +45,12 @@ void Game::start(Renderer &renderer) {
 
         int squareNum{};
 
+		std::string promptMessage = currentPlayer->getName() + " (" + currentPlayer->getSymbol() + "), enter your move (1-9): ";
+
 		renderer.clearScreen();
-		renderer.renderPlayingScreen(board);
+		renderer.renderPlayingScreen(board, errorMessage, promptMessage);
 
-        //board.printExampleBoard();
-        //board.print();
-        // 
-        //std::cout << errorMessage << std::endl;
-
-        std::cout << "\n\n";
-
-		squareNum = currentPlayer->prompt(board, renderer);
+		squareNum = currentPlayer->prompt(board, renderer, promptMessage);
         Board::UpdateStatus updateStatus = board.updateBoard(squareNum, currentPlayer->getSymbol());
         if (updateStatus == Board::UpdateStatus::success) {
             errorMessage = "";
@@ -73,15 +69,19 @@ void Game::start(Renderer &renderer) {
     //board.printExampleBoard();
     //board.print();
     if (board.evaluate() == +10) {
-        std::cout << "\nGood game! Player 2 wins!" << std::endl;
+        //std::cout << "\nGood game! Player 2 wins!" << std::endl;
+		renderer.renderText("Good game! Player 2 wins!");
     }
     else if (board.evaluate() == -10) {
-        std::cout << "\nGood game! Player 1 wins!" << std::endl;
+        //std::cout << "\nGood game! Player 1 wins!" << std::endl;
+		renderer.renderText("Good game! Player 1 wins!");
     }
     else if (board.evaluate() == 0) {
-        std::cout << "\nGood game! It's a TIE!" << std::endl;
+        //std::cout << "\nGood game! It's a TIE!" << std::endl;
+		renderer.renderText("Good game! It's a TIE!");
     }
     else {
-        std::cout << "\nGood game!" << std::endl;
+        //std::cout << "\nGood game!" << std::endl;
+		renderer.renderText("Good game!");
     }
 }

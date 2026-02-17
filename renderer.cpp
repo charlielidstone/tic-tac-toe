@@ -11,19 +11,26 @@ void Renderer::setCursorHeight(int totalContentLines) const {
 	std::cout << "\033[" << (screenHeight / 2 - totalContentLines) << "B";
 }
 
-std::string Renderer::prompt() const {
+std::string Renderer::prompt(int promptMessageLength) const {
 	std::string value{};
+	setCursorPosition(screenWidth/2+promptMessageLength/2 + 1, screenHeight/2 - 1);
 	std::cin >> value;
 	return value;
 }
 
-void Renderer::renderPlayingScreen(Board &board) {
+void Renderer::setCursorPosition(int x, int y) const {
+	std::cout << "\033[H\033[" << x << "C\033[" << y << "B";
+}
+
+void Renderer::renderPlayingScreen(Board& board, std::string errorMessage, std::string promptMessage) {
 	const int TOTAL_LINES = 10;
 	clearScreen();
-	horizontalLine(screenWidth);
+	//horizontalLine(screenWidth);
 	setCursorHeight(TOTAL_LINES);
-	std::string title = "Tic Tac Toe\n\n";
-	renderText(title);
+	std::string title = "Tic Tac Toe";
+	renderText(title, 11);
+	newLine();
+	newLine();
 
 	const std::string grey = "\033[38;2;80;80;80m";
 	const std::string reset = "\033[0m";
@@ -46,13 +53,26 @@ void Renderer::renderPlayingScreen(Board &board) {
 				}
 			}
 		}
-		renderText(rowText, 12);
+		renderText(rowText, 10);
 		rowText = "";
 		if (row < 2) {
-			renderText("---+---+---", 12);
+			renderText("---+---+---", 10);
 		}
 	}
+	
+	newLine();
+	renderText(promptMessage);
+	newLine();
+	renderText(errorMessage);
 
+	/*for (int i = 0; i < (screenHeight/2 - TOTAL_LINES/2); i++) {
+		newLine();
+	}*/
+	//horizontalLine(screenWidth);
+}
+
+void Renderer::newLine() const {
+	std::cout << "\n";
 }
 
 void Renderer::horizontalLine(int length) const {

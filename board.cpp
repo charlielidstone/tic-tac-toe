@@ -109,10 +109,10 @@ void Board::handleError(Board::UpdateStatus updateStatus, int squareNum, std::st
         *errorMessage = std::to_string(squareNum) + " is already taken!";
     }
     else if (updateStatus == Board::UpdateStatus::failInvalidInput) {
-        *errorMessage = "\nPlease enter a single digit from 1 to 9.";
+        *errorMessage = "Please enter a single digit from 1 to 9.";
     }
     else {
-        *errorMessage = "\nSome unknown error occurred. :(";
+        *errorMessage = "Some unknown error occurred. :(";
     }
 }
 
