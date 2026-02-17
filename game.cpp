@@ -70,18 +70,33 @@ void Game::start(Renderer &renderer) {
     //board.print();
     if (board.evaluate() == +10) {
         //std::cout << "\nGood game! Player 2 wins!" << std::endl;
-		renderer.renderText("Good game! Player 2 wins!");
+		//renderer.renderText("Good game! Player 2 wins!");
+		renderer.renderGameOverScreen(board, 'O');
     }
     else if (board.evaluate() == -10) {
         //std::cout << "\nGood game! Player 1 wins!" << std::endl;
-		renderer.renderText("Good game! Player 1 wins!");
+		//renderer.renderText("Good game! Player 1 wins!");
+        renderer.renderGameOverScreen(board, 'X');
     }
     else if (board.evaluate() == 0) {
         //std::cout << "\nGood game! It's a TIE!" << std::endl;
-		renderer.renderText("Good game! It's a TIE!");
+		//renderer.renderText("Good game! It's a TIE!");
+        renderer.renderGameOverScreen(board, 'T');
     }
     else {
         //std::cout << "\nGood game!" << std::endl;
-		renderer.renderText("Good game!");
+		//renderer.renderText("Good game!");
+		renderer.renderGameOverScreen(board, 'T');
+    }
+
+    // Keep running until 'q' is pressed
+    //std::cout << "Press 'q' and Enter to exit..." << std::endl;
+	renderer.renderText("Press 'q' and Enter to exit...");
+    char input;
+    while (std::cin >> input) {
+        if (input == 'q' || input == 'Q') {
+            break;
+        }
+        std::cout << "Press 'q' and Enter to exit..." << std::endl;
     }
 }

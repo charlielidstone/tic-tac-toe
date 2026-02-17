@@ -11,6 +11,7 @@ class Renderer {
 		void clearScreen() const;
 		void renderStartingScreen();
 		void renderPlayingScreen(Board& board, std::string errorMessage, std::string promptMessage);
+		void renderGameOverScreen(Board& board, char winner);
 		void labelScreenColumns();
 		void labelScreenRows();
 		std::string prompt(int promptMessageLength) const;

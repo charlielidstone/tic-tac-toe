@@ -13,7 +13,7 @@ void Renderer::setCursorHeight(int totalContentLines) const {
 
 std::string Renderer::prompt(int promptMessageLength) const {
 	std::string value{};
-	setCursorPosition(screenWidth/2+promptMessageLength/2 + 1, screenHeight/2 - 1);
+	setCursorPosition(screenWidth/2+promptMessageLength/2 + 1, screenHeight/2);
 	std::cin >> value;
 	return value;
 }
@@ -61,6 +61,7 @@ void Renderer::renderPlayingScreen(Board& board, std::string errorMessage, std::
 	}
 	
 	newLine();
+	newLine();
 	renderText(promptMessage);
 	newLine();
 	renderText(errorMessage);
@@ -69,6 +70,51 @@ void Renderer::renderPlayingScreen(Board& board, std::string errorMessage, std::
 		newLine();
 	}*/
 	//horizontalLine(screenWidth);
+}
+
+void Renderer::renderGameOverScreen(Board& board, char winner) {
+	const int TOTAL_LINES = 10;
+	clearScreen();
+	setCursorHeight(TOTAL_LINES);
+	
+	std::string title = "Game Over!";
+	renderText(title, 10);
+	newLine();
+	newLine();
+
+	const std::string grey = "\033[38;2;80;80;80m";
+	const std::string reset = "\033[0m";
+
+	// Render the final board state
+	std::string rowText = "";
+	for (int row = 0; row < 3; row++) {
+		for (int col = 0; col < 3; col++) {
+			rowText += " ";
+			rowText += board.getCell(row, col);
+			if (col < 2) {
+				rowText += " |";
+			}
+		}
+		renderText(rowText, 10);
+		rowText = "";
+		if (row < 2) {
+			renderText("---+---+---", 10);
+		}
+	}
+	
+	newLine();
+	newLine();
+	
+	// Display winner message
+	std::string resultMessage;
+	if (winner == 'T') {
+		resultMessage = "It's a tie!";
+	} else {
+		resultMessage = "Player " + std::string(1, winner) + " wins!";
+	}
+	renderText(resultMessage);
+	newLine();
+	//renderText("Press Enter to return to menu.");
 }
 
 void Renderer::newLine() const {
