@@ -25,7 +25,14 @@ Game::Game(bool botStarts) : isBotGame(true), botStarts(botStarts) {
     currentPlayer = player1.get();
 }
 
-void Game::start() {
+void Game::displayStartingScreen() {
+    Renderer renderer;
+    renderer.renderStartingScreen();
+	std::cin.get();
+    start(renderer);
+}
+
+void Game::start(Renderer &renderer) {
     isOver = false;
 
     Board board;
@@ -37,12 +44,17 @@ void Game::start() {
 
         int squareNum{};
 
-        utils::clearScreen();
-        //board.printExampleBoard();
-        board.print();
-        std::cout << errorMessage << std::endl;
+		renderer.clearScreen();
+		renderer.renderPlayingScreen(board);
 
-		squareNum = currentPlayer->prompt(board);
+        //board.printExampleBoard();
+        //board.print();
+        // 
+        //std::cout << errorMessage << std::endl;
+
+        std::cout << "\n\n";
+
+		squareNum = currentPlayer->prompt(board, renderer);
         Board::UpdateStatus updateStatus = board.updateBoard(squareNum, currentPlayer->getSymbol());
         if (updateStatus == Board::UpdateStatus::success) {
             errorMessage = "";
@@ -57,9 +69,9 @@ void Game::start() {
 
     } while (!isOver);
 
-    utils::clearScreen();
+    renderer.clearScreen();
     //board.printExampleBoard();
-    board.print();
+    //board.print();
     if (board.evaluate() == +10) {
         std::cout << "\nGood game! Player 2 wins!" << std::endl;
     }

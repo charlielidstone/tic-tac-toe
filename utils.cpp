@@ -2,12 +2,6 @@
 #include "utils.hpp"
 
 namespace utils {
-	void clearScreen() {
-		//std::cout << "\033[2J\033[1;1H";
-
-        std::cout << "\033[7A";
-        std::cout << std::flush;
-	}
 
 	int getSquareNum(int x, int y) {
 		return x * 3 + y + 1;

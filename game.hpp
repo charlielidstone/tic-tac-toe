@@ -2,12 +2,14 @@
 #define GAME_HPP
 
 #include "player.hpp"
+#include "renderer.hpp"
 
 class Game {
 	public:
 		Game();
 		Game(bool botStarts);
-		void start();
+		void displayStartingScreen();
+		void start(Renderer &renderer);
 	private:
 		bool isOver;
 		bool isBotGame;

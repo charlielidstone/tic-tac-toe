@@ -4,6 +4,7 @@
 #include <string>
 #include "board.hpp"
 #include "engine.hpp"
+#include "renderer.hpp"
 
 class Engine;
 
@@ -19,7 +20,7 @@ class Player {
 		Player();
 		Player(PlayerType playertype);
 		virtual ~Player() = default;
-		virtual int prompt(Board board) = 0;
+		virtual int prompt(Board board, Renderer& renderer) = 0;
 		virtual bool isComputer() const { return false; }
 		char getSymbol() const { return symbol; }
 	protected:
@@ -31,14 +32,14 @@ class Player {
 class HumanPlayer : public Player {
 	public:
 		HumanPlayer(char symbol = 'X');
-		int prompt(Board board) override;
+		int prompt(Board board, Renderer &renderer) override;
 
 };
 
 class ComputerPlayer : public Player {
 	public:
 		ComputerPlayer(char symbol = 'O');
-		int prompt(Board board) override;
+		int prompt(Board board, Renderer& renderer) override;
 		bool isComputer() const override { return true; }
 	private:
 		Engine engine;

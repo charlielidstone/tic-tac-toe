@@ -32,15 +32,17 @@ Player::Player(PlayerType playertype) : type(playertype) {
 //int Player::prompt(Board board) {}
 
 HumanPlayer::HumanPlayer(char symbol) : Player((symbol == 'X' ? HUMAN_X : HUMAN_O)) {}
-int HumanPlayer::prompt(Board board) {
+int HumanPlayer::prompt(Board board, Renderer &renderer) {
 	int squareNum{};
-	std::cout << name << " (" << symbol << "), enter your move (1-9): ";
-	std::cin >> squareNum;
+	//std::cout << name << " (" << symbol << "), enter your move (1-9): ";
+	//std::cin >> squareNum;
+	renderer.renderText(name + " (" + symbol + "), enter your move (1-9): ", 36, false);
+	squareNum = std::stoi(renderer.prompt());
 	return squareNum;
 }
 
 ComputerPlayer::ComputerPlayer(char symbol) : Player((symbol == 'X' ? COMPUTER_X : COMPUTER_O)), engine() {}
-int ComputerPlayer::prompt(Board board) {
+int ComputerPlayer::prompt(Board board, Renderer &renderer) {
 	std::pair<int, int> move = engine.findBestMove(board);
 	return utils::getSquareNum(move.first, move.second);
 }

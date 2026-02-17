@@ -8,8 +8,8 @@ class Board {
     public:
         Board();
 	    Board(const std::array<std::array<char, 3>, 3> &initialBoard);
-        void print();
-	    void printExampleBoard();
+        //void print();
+	    //void printExampleBoard();
         char getCell(int row, int col) const;
         char getCell(int squareNum) const;
 	    int isMovesLeft() const;

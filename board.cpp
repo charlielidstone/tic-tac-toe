@@ -11,12 +11,15 @@ Board::Board() : updateStatus(notUpdated) {
 }
 
 Board::Board(const std::array<std::array<char, 3>, 3> &initialBoard) : updateStatus(notUpdated), grid(initialBoard) {}
-
+/*
 void Board::print() {
     const std::string grey = "\033[38;2;80;80;80m";
     const std::string reset = "\033[0m";
 
+    //std::cout << "\033[10B";
+
     for (int row = 0; row < grid.size(); row++) {
+        std::cout << "\033[50C";
 		for (int col = 0; col < grid.size(); col++) {
             if (grid[row][col] == ' ') {
                 std::cout << " " << grey << std::to_string(row * 3 + col + 1) << reset << " |";
@@ -28,6 +31,7 @@ void Board::print() {
 			}
         }
         std::cout << " \n";
+        std::cout << "\033[50C";
         if (row < grid.size() - 1) {
             std::cout << "---+---+---\n";
         }
@@ -55,7 +59,7 @@ void Board::printExampleBoard() {
         << grey << "8" << reset << " | "
         << grey << "9" << reset << "\n\n";
 }
-
+*/
 int Board::isMovesLeft() const {
 	for (auto& row : grid) {
         for (auto &cell : row) {
