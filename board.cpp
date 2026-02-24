@@ -144,3 +144,26 @@ int Board::evaluate() const {
 
     return 0;
 }
+
+std::string Board::toString(bool includeLabels) const {
+    std::string result;
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            result += " ";
+            if (grid[row][col] == ' ') {
+				result += includeLabels ? std::to_string(row * 3 + col + 1) : " ";
+            } else {
+                result += grid[row][col];
+            }
+            result += " ";
+            if (col < 2) {
+                result += "|";
+            }
+        }
+        result += "\n";
+        if (row < 2) {
+            result += "---+---+---\n";
+        }
+    }
+    return result;
+}

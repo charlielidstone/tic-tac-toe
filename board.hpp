@@ -31,6 +31,7 @@ class Board {
         void handleError(Board::UpdateStatus updateStatus, int squareNum, std::string* errorMessage);
         void setCell(int row, int col, char value);
 	    void setCell(int squareNum, char value);
+		std::string toString(bool includeLabels) const;
     private:
         std::array<std::array<char, 3>, 3> grid{ {} };
 };

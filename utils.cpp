@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "utils.hpp"
 
 namespace utils {
@@ -19,5 +20,19 @@ namespace utils {
         if (squareNum % 3 == 1) y = 0;
 
         return { x, y };
+    }
+
+    void log(const std::string& filename, const std::string& text, bool newLine = true) {
+        std::ofstream log_file(filename, std::ios::app);
+
+        if (!log_file) {
+            std::cerr << "Failed to open log file for writing: " << filename << std::endl;
+            return;
+        }
+
+        log_file << text;
+        if (newLine) {
+            log_file << '\n';
+        }
     }
 }

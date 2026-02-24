@@ -15,8 +15,8 @@ Game::Game() : isBotGame(false), botStarts(false) {
 
 Game::Game(bool botStarts) : isBotGame(true), botStarts(botStarts) {
     if (botStarts) {
-        player1 = std::make_unique<ComputerPlayer>('X');
-        player2 = std::make_unique<HumanPlayer>('O');
+        player1 = std::make_unique<ComputerPlayer>('O');
+        player2 = std::make_unique<HumanPlayer>('X');
     }
     else {
         player1 = std::make_unique<HumanPlayer>('X');
