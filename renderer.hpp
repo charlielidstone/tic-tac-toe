@@ -17,6 +17,7 @@ class Renderer {
 		void labelScreenRows();
 		std::string prompt(int promptMessageLength) const;
 		static void renderGameOverMessage(char winner);
+		void borderedText(std::string text, int paddingY, int paddingX, char borderCharY, char borderCharX);
 	private:
 		const int screenWidth;
 		const int screenHeight;

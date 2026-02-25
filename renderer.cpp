@@ -145,6 +145,35 @@ void Renderer::renderStartingScreen() {
 	//renderTextLeft(instructions3, 40);
 }
 
+//void Renderer::renderStartingScreen() {
+//	borderedText("Welcome to Tic Tac Toe!", 5, 8, ' ', ' ');
+//}
+
+void Renderer::borderedText(std::string text, int paddingY, int paddingX, char borderCharY, char borderCharX) {
+	int width = text.length() + paddingX * 2 + 2;
+	int height = paddingY * 2 + 3;
+
+	for (int i=0; i<width; i++) {
+		std::cout << borderCharX;
+	}
+
+	for (int i=0; i<height-2; i++) {
+		std::cout << "\n" << borderCharY;
+		if (i == paddingY) {
+			std::cout << std::string(paddingX, ' ') << text << std::string(paddingX, ' ');
+		}
+		else {
+			std::cout << std::string(width-2, ' ');
+		}
+		std::cout << borderCharY;
+	}
+
+	std::cout << "\n";
+	for (int i=0; i<width; i++) {
+		std::cout << borderCharX;
+	}
+}
+
 void Renderer::renderText(const std::string &text, const int length, bool newLine) const {
 	std::cout
 		<< "\033[" << (screenWidth / 2 - (length == -1 ? text.length() : length)/ 2) << "C"
