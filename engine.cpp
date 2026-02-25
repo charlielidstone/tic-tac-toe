@@ -21,9 +21,11 @@ int Engine::minimax(Board board, bool isMax, int depth) {
     for (int row = 0; row < 3; row++) {
         for (int col = 0; col < 3; col++) {
             if (board.getCell(row, col) == ' ') {
+                
                 board.setCell(row, col, isMax ? 'X' : 'O');
                 int val = minimax(board, !isMax, depth + 1);
                 board.setCell(row, col, ' ');
+                
                 if (val <= bestScore && isMax) {
                     bestScore = val;
                 }
