@@ -16,41 +16,24 @@ int Engine::minimax(Board board, bool isMax, int depth) {
 
     if (!board.isMovesLeft()) return 0;
 
-    if (isMax) {
-        int bestScore = std::numeric_limits<int>::max();
+    int bestScore = isMax ? std::numeric_limits<int>::max() : std::numeric_limits<int>::min();
 
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if (board.getCell(row, col) == ' ') {
-                    board.setCell(row, col, 'X');
-                    int val = minimax(board, false, depth + 1);
-                    board.setCell(row, col, ' ');
-                    if (val <= bestScore) {
-                        bestScore = val;
-                    }
+    for (int row = 0; row < 3; row++) {
+        for (int col = 0; col < 3; col++) {
+            if (board.getCell(row, col) == ' ') {
+                board.setCell(row, col, isMax ? 'X' : 'O');
+                int val = minimax(board, !isMax, depth + 1);
+                board.setCell(row, col, ' ');
+                if (val <= bestScore && isMax) {
+                    bestScore = val;
+                }
+                else if (val >= bestScore && !isMax) {
+                    bestScore = val;
                 }
             }
         }
-        return bestScore;
     }
-    else {
-        int bestScore = std::numeric_limits<int>::min();
-
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if (board.getCell(row, col) == ' ') {
-                    board.setCell(row, col, 'O');
-                    int val = minimax(board, true, depth + 1);
-					board.setCell(row, col, ' ');
-                    if (val >= bestScore) {
-                        bestScore = val;
-                    }
-                }
-            }
-        }
-
-        return bestScore;
-    }
+    return bestScore;
 }
 
 std::pair<int, int> Engine::findBestMove(Board board) {
