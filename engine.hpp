@@ -18,7 +18,7 @@ private:
 	* @return an integer representing the score the the given position, 0 means the position results in a draw
 	*/
 	int minimax(Board board, bool isMax, int depth);
-	int artificialDelay = 100;
+	int artificialDelay = 500;
 
 };
 
