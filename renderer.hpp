@@ -7,6 +7,7 @@ class Renderer {
 	public:
 		Renderer();
 		void renderText(const std::string &text, int length = -1, bool newLine = true) const;
+		void renderTextLeft(const std::string& text, int marginLeft = 0, bool newLine = true) const;
 		void newLine() const;
 		void clearScreen() const;
 		void renderStartingScreen();

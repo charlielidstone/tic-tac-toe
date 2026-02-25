@@ -5,7 +5,11 @@
 
 int main(void) {
 
-	Game game(true);
+	Renderer renderer;
+	renderer.renderStartingScreen();
+	std::cin.get();
+
+	Game game(true, renderer);
 	game.displayStartingScreen();
 
 	return 0;

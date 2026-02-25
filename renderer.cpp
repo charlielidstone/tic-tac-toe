@@ -135,13 +135,28 @@ void Renderer::renderStartingScreen() {
 	setCursorHeight(TOTAL_LINES);
 	std::string welcomeMessage = "Welcome to Tic Tac Toe!\n\n";
 	std::string instructions = "Press Enter to start a new game.";
+	//std::string instructions1 = "1 Player vs Player";
+	//std::string instructions2 = "2 Player vs Computer (computer goes first)";
+	//std::string instructions3 = "3 Player vs Computer (player goes first)";
 	renderText(welcomeMessage);
 	renderText(instructions);
+	//renderTextLeft(instructions1, 40);
+	//renderTextLeft(instructions2, 40);
+	//renderTextLeft(instructions3, 40);
 }
 
 void Renderer::renderText(const std::string &text, const int length, bool newLine) const {
 	std::cout
 		<< "\033[" << (screenWidth / 2 - (length == -1 ? text.length() : length)/ 2) << "C"
+		<< text;
+	if (newLine) {
+		std::cout << std::endl;
+	}
+}
+
+void Renderer::renderTextLeft(const std::string &text, int marginLeft, bool newLine) const {
+	std::cout
+		<< "\033[" << marginLeft << "C"
 		<< text;
 	if (newLine) {
 		std::cout << std::endl;

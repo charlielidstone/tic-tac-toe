@@ -18,7 +18,8 @@ private:
 	* @return an integer representing the score the the given position
 	*/
 	int minimax(Board board, bool isMax, int depth);
-	int artificialDelay = 2000;
+	int artificialDelay = 100;
+
 };
 
 #endif

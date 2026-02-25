@@ -8,6 +8,7 @@ Board::Board() : updateStatus(notUpdated) {
 	for (auto &row : grid) {
 		row.fill(' ');
 	}
+    //setCell(5, 'O');
 }
 
 Board::Board(const std::array<std::array<char, 3>, 3> &initialBoard) : updateStatus(notUpdated), grid(initialBoard) {}

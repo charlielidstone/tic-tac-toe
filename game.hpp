@@ -6,8 +6,8 @@
 
 class Game {
 	public:
-		Game();
-		Game(bool botStarts);
+		Game(Renderer& renderer);
+		Game(bool botStarts, Renderer& renderer);
 		void displayStartingScreen();
 		void start(Renderer &renderer);
 	private:
@@ -17,6 +17,7 @@ class Game {
 		std::unique_ptr<Player> player1;
 		std::unique_ptr<Player> player2;
 		Player* currentPlayer;
+		Renderer& renderer;
 };
 
 #endif

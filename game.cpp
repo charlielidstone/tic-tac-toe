@@ -7,13 +7,13 @@
 #include "engine.hpp"
 #include "player.hpp"
 
-Game::Game() : isBotGame(false), botStarts(false) {
+Game::Game(Renderer& renderer) : isBotGame(false), botStarts(false), renderer(renderer) {
     player1 = std::make_unique<HumanPlayer>('X');
     player2 = std::make_unique<HumanPlayer>('O');
     currentPlayer = player1.get();
 }
 
-Game::Game(bool botStarts) : isBotGame(true), botStarts(botStarts) {
+Game::Game(bool botStarts, Renderer& renderer) : isBotGame(true), botStarts(botStarts), renderer(renderer) {
     if (botStarts) {
         player1 = std::make_unique<ComputerPlayer>('O');
         player2 = std::make_unique<HumanPlayer>('X');
@@ -26,9 +26,34 @@ Game::Game(bool botStarts) : isBotGame(true), botStarts(botStarts) {
 }
 
 void Game::displayStartingScreen() {
-    Renderer renderer;
-    renderer.renderStartingScreen();
-	std::cin.get();
+    /*
+    int gameType = 0;
+    
+    while (gameType != '1' && gameType != '2' && gameType != '3') {
+        renderer.clearScreen();
+        renderer.renderStartingScreen();
+        renderer.renderText("Please enter 1, 2, or 3 to select a game mode.");
+        gameType = std::cin.get();
+    }
+
+    if (gameType == '1') {
+		isBotGame = false;
+        player1 = std::make_unique<HumanPlayer>('X');
+        player2 = std::make_unique<HumanPlayer>('O');
+    }
+    else if (gameType == '2') {
+		isBotGame = true;
+		botStarts = true;
+        player1 = std::make_unique<ComputerPlayer>('O');
+        player2 = std::make_unique<HumanPlayer>('X');
+    }
+    else if (gameType == '3') {
+		isBotGame = true;
+        botStarts = false;
+        player1 = std::make_unique<HumanPlayer>('X');
+        player2 = std::make_unique<ComputerPlayer>('O');
+    }*/
+
     start(renderer);
 }
 
