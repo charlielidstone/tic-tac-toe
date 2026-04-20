@@ -9,7 +9,7 @@ int main(void) {
 	renderer.renderStartingScreen();
 	std::cin.get();
 
-	Game game(false, renderer);
+	Game game(true, renderer);
 	game.displayStartingScreen();
 
 	return 0;
